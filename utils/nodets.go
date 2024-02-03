@@ -6,7 +6,7 @@ import (
 
 var genNodeTS = &cobra.Command{
 	Use:   "ts-gen",
-	Short: "Generate nodejs project using TypeScript try",
+	Short: "Generate nodejs project using TypeScript",
 	Long: `Generate nodejs project using Typescript
 	Example usage:
 	gno ts-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"`,
