@@ -1,4 +1,4 @@
-module github.com/Faanilo/go-node
+module github.com/faanrm/go-node
 
 go 1.21.6
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Faanilo/go-node/utils"
+	"github.com/faanrm/go-node/utils"
 )
 
 func main() {
