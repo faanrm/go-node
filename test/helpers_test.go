@@ -47,7 +47,6 @@ func TestChangeDirectory(t *testing.T) {
 }
 
 func TestCreateFile(t *testing.T) {
-	// Create a temporary directory for the test
 	dir := t.TempDir()
 	fmt.Printf("Test directory: %s\n", dir)
 
