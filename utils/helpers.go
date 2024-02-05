@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func createDirectory(dir string) {
+func CreateDirectory(dir string) {
 	if dir == "" {
 		return
 	}
@@ -30,7 +30,7 @@ func createDirectory(dir string) {
 	fmt.Printf("Directory %v created successfully\n", dir)
 }
 
-func checkNPMInstallation() {
+func CheckNPMInstallation() {
 	checkNPM := exec.Command("npm", "--version")
 	npmVerOut, err := checkNPM.Output()
 	if err != nil {
@@ -40,13 +40,20 @@ func checkNPMInstallation() {
 	fmt.Printf("npm version : %v \n", string(npmVerOut))
 }
 
-func changeDirectory(dir string) {
-	if err := os.Chdir(dir); err != nil {
-		log.Fatalf("Error changing directory: %v", err)
+/*
+	func ChangeDirectory(dir string) {
+		if err := os.Chdir(dir); err != nil {
+			log.Fatalf("Error changing directory: %v", err)
+		}
 	}
+*/
+func ChangeDirectory(dir string) error {
+	if err := os.Chdir(dir); err != nil {
+		return fmt.Errorf("Error changing directory: %v", err)
+	}
+	return nil
 }
-
-func createFile(fileName string, dir string) {
+func CreateFile(fileName string, dir string) {
 
 	if err := os.Chdir(dir); err != nil {
 		log.Fatalf("Error changing directory: %v", err)
@@ -71,7 +78,7 @@ func createFile(fileName string, dir string) {
 
 }
 
-func initNodeProject(cmd *cobra.Command) {
+func InitNodeProject(cmd *cobra.Command) {
 	def, _ := cmd.Flags().GetBool("yes")
 	cmdInit := exec.Command("npm", "init")
 	if def {
@@ -89,7 +96,7 @@ func initNodeProject(cmd *cobra.Command) {
 	fmt.Println("Node JS project initialized...")
 }
 
-func installLibraries(cmd *cobra.Command, flag string) {
+func InstallLibraries(cmd *cobra.Command, flag string) {
 	usage := cmd.Use
 	librariesStr, _ := cmd.Flags().GetString(flag)
 	libraries := strings.Fields(librariesStr)
@@ -119,7 +126,7 @@ func installLibraries(cmd *cobra.Command, flag string) {
 	}
 }
 
-func generateTSConfigFile() {
+func GenerateTSConfigFile() {
 	// Create an instance of the TSConfig structure with your desired values.
 	config := TSConfig{
 		CompilerOptions: CompilerOptions{
@@ -177,7 +184,7 @@ func InstallTSC() {
 
 }
 
-func createDirectoryTemp(dir string) {
+func CreateDirectoryTemp(dir string) {
 	// Create the directory if it doesn't exist
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		err := os.MkdirAll(dir, 0755)
@@ -188,7 +195,7 @@ func createDirectoryTemp(dir string) {
 	}
 }
 
-func moveFiles(cmd *cobra.Command, destinationDir string, sourceDir string) {
+func MoveFiles(cmd *cobra.Command, destinationDir string, sourceDir string) {
 	// Get all files and subdirectories in the source directory
 	files, err := os.ReadDir(sourceDir)
 	if err != nil {

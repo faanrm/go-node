@@ -37,12 +37,12 @@ func init() {
 
 func generateNodeJS(cmd *cobra.Command, args []string) {
 	dir, _ := cmd.Flags().GetString("directory")
-	createDirectory(dir)
-	checkNPMInstallation()
-	changeDirectory(dir)
-	initNodeProject(cmd)
-	installLibraries(cmd, "libs")
-	installLibraries(cmd, "dev-libs")
+	CreateDirectory(dir)
+	CheckNPMInstallation()
+	ChangeDirectory(dir)
+	InitNodeProject(cmd)
+	InstallLibraries(cmd, "libs")
+	InstallLibraries(cmd, "dev-libs")
 }
 
 func generateTemplate(cmd *cobra.Command, args []string) {
@@ -55,7 +55,7 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 	destDir := args[0] // Get the folder name from the command line arguments
 
 	// Create the destination directory if it doesn't exist
-	createDirectoryTemp(destDir)
+	CreateDirectoryTemp(destDir)
 	fmt.Println("Generating template ...")
 
 	// Clone the repository
@@ -70,7 +70,7 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 	}
 
 	// Move all files from the cloned repository to the destination directory
-	moveFiles(cmd, destDir, "API-EXPRESS")
+	MoveFiles(cmd, destDir, "API-EXPRESS")
 
 	fmt.Println("Template generated successfully ")
 }

@@ -10,7 +10,7 @@ import (
 
 var templateTs = &cobra.Command{
 	Use:   "template-ts",
-	Short: "Generate node ts project using Typescript",
+	Short: "Generate node ts project using Typescript²	",
 	Run:   generateNodeTsTemplate,
 }
 var genNodeTS = &cobra.Command{
@@ -37,7 +37,7 @@ func generateNodeTsTemplate(cmd *cobra.Command, args []string) {
 	}
 	repoUrl := "https://github.com/faanrm/nodeTs-template"
 	destDir := args[0] //this to get the folder name from command line
-	createDirectory(destDir)
+	CreateDirectory(destDir)
 	fmt.Println("Waiting for generating template .....")
 
 	//clone repo first
@@ -50,28 +50,28 @@ func generateNodeTsTemplate(cmd *cobra.Command, args []string) {
 		return
 	}
 	//move all repo to the desired folder
-	moveFiles(cmd, destDir, "nodeTs-template")
+	MoveFiles(cmd, destDir, "nodeTs-template")
 	fmt.Println("Template generated successfully")
 }
 func generateNodeTS(cmd *cobra.Command, args []string) {
 	dir, _ := cmd.Flags().GetString("directory")
-	createDirectory(dir)
-	checkNPMInstallation()
+	CreateDirectory(dir)
+	CheckNPMInstallation()
 
-	changeDirectory(dir)
+	ChangeDirectory(dir)
 
-	initNodeProject(cmd)
+	InitNodeProject(cmd)
 
-	generateTSConfigFile()
+	GenerateTSConfigFile()
 
-	installLibraries(cmd, "libs")
-	installLibraries(cmd, "dev-libs")
+	InstallLibraries(cmd, "libs")
+	InstallLibraries(cmd, "dev-libs")
 
-	createDirectory("./src")
-	createDirectory("./dist")
+	CreateDirectory("./src")
+	CreateDirectory("./dist")
 
 	InstallTSC()
 
-	createFile("main.ts", "./src")
+	CreateFile("main.ts", "./src")
 
 }
