@@ -160,7 +160,7 @@ func InstallTSC() {
 	err := cmd.Run()
 	if err != nil {
 		// tsc is not installed; let's install it.
-		fmt.Println("tsc is not installed. Installing TypeScript...")
+		fmt.Println("tsc is not installed. Waiting for TypeScript installation...")
 		installCmd := exec.Command("npm", "install", "-g", "typescript")
 		installCmd.Stdout = os.Stdout
 		installCmd.Stderr = os.Stderr
