@@ -29,13 +29,13 @@ Generate a Node.js Template :
 go-node  template my-template-folder
 ```
 
-Generate a TypeScript Node.js Project
+Generate a TypeScript Node Project
 
 ```bash
 go-node ts-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
 ```
 
-Generate a Node.js Project Template
+Generate a Node TS Project Template
 
 ```bash
 go-node template-ts my-template-folder
