@@ -15,6 +15,8 @@ To install Go-Node, you need to have Go installed. Then, run the following comma
 ```bash
 go get github.com/faanrm/go-node
 
+
+```bash
 ## Usage 
 
 Generate a Node.js Project : 
