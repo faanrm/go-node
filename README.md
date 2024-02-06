@@ -14,29 +14,29 @@ To install Go-Node, you need to have Go installed. Then, run the following comma
 
 ```bash
 go get github.com/faanrm/go-node
+```
 
+## Usage
 
 ```bash
-## Usage 
-
-Generate a Node.js Project : 
+Generate a Node.js Project :
 go-node node-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
+```
 
-Generate a Node.js Template :  
+Generate a Node.js Template :
 
+```bash
 go-node  template my-template-folder
-
-This command generates a basic Node.js project template with TypeScript.
-
-This command generates a new Node.js project with the specified dependencies.
+```
 
 Generate a TypeScript Node.js Project
 
+```bash
 go-node ts-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
-
-This command generates a new Node project using TypeScript.
+```
 
 Generate a Node.js Project Template
 
+```bash
 go-node template-ts my-template-folder
-This command generates a basic Node project template with TypeScript.
+```
