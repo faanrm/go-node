@@ -14,33 +14,34 @@ Go-Node is a command-line interface (CLI) tool developed in Go for quickly gener
 
 To install Go-Node, you need to have Go installed. Then, run the following command:
 
+Linux  : 
 ```bash
-go get github.com/faanrm/go-node
+brew install gno
 ```
 
 ## Usage
 
 ```bash
 Generate a Node.js Project :
-go-node node-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
+gno node-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
 ```
 
 Generate a Node.js Template :
 
 ```bash
-go-node  template my-template-folder
+gno  template my-template-folder
 ```
 
 Generate a TypeScript Node Project
 
 ```bash
-go-node ts-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
+gno ts-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"
 ```
 
 Generate a Node TS Project Template
 
 ```bash
-go-node template-ts my-template-folder
+gno template-ts my-template-folder
 ```
 
 ## Contributing
