@@ -9,8 +9,8 @@
 project_name: gno
 release:
   github:
-    owner : faanrm
-    name : go-node
+    owner: faanrm
+    name: go-node
 
 # Define actions to perform before the release.
 before:
@@ -37,10 +37,12 @@ archives:
     # Customize the naming template for the archives.
     name_template: >-
       {{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
+    id: default  # Ajout d'un identifiant unique pour cette archive
   - format: zip
     # Customize the naming template for Windows archives.
     name_template: >-
       {{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
+    id: windows  # Ajout d'un identifiant unique pour cette archive
 
 # Define changelog configuration.
 changelog:
