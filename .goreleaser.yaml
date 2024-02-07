@@ -6,41 +6,47 @@
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
 # vim: set ts=2 sw=2 tw=0 fo=cnqoj
 
-version: 1
+project_name: gno
+release:
+  github:
+    owner : faanrm
+    name : go-node
 
+# Define actions to perform before the release.
 before:
   hooks:
-    # You may remove this if you don't use go modules.
+    # Update dependencies if using Go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
+    # Generate code if needed.
     - go generate ./...
 
+# Define build configuration.
 builds:
   - env:
+      # Disable CGO for static binaries.
       - CGO_ENABLED=0
     goos:
+      # Build for Linux, Windows, and macOS.
       - linux
       - windows
       - darwin
 
+# Define archive formats and templates.
 archives:
   - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of `uname`.
+    # Customize the naming template for the archives.
     name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # use zip for windows archives
-    format_overrides:
-      - goos: windows
-        format: zip
+      {{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
+  - format: zip
+    # Customize the naming template for Windows archives.
+    name_template: >-
+      {{ .ProjectName }}_{{ .Tag }}_{{ .Os }}_{{ .Arch }}
 
+# Define changelog configuration.
 changelog:
   sort: asc
   filters:
     exclude:
+      # Exclude lines starting with "docs:" or "test:" from the changelog.
       - "^docs:"
       - "^test:"
