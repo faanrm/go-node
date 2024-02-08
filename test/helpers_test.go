@@ -53,7 +53,7 @@ func TestCreateFile(t *testing.T) {
 	fileName := "testFile.txt"
 	content := "// Start writing here\nconsole.log(\"Hello World\");"
 
-	// Create the file
+	//create file
 	utils.CreateFile(fileName, dir)
 
 	// Check if the file was created
