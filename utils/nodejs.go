@@ -33,6 +33,7 @@ func init() {
 	genNode.Flags().StringP("dev-libs", "d", " ", "List of Node.js libraries to install")
 	// Modify the template command to accept an argument for the folder name
 	template.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
+	template.Flags().StringP("database", "d", "mongo", "Choose database type: mongo or sql")
 }
 
 func generateNodeJS(cmd *cobra.Command, args []string) {
@@ -51,8 +52,24 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	repoURL := "https://github.com/Faanilo/API-EXPRESS.git"
-	destDir := args[0] // Get the folder name from the command line arguments
+	repoURLMongo := "https://github.com/Faanilo/API-EXPRESS.git"
+	repoURLSQL := "https://github.com/faanrm/NodeJs-Sequelize-Starter"
+	destDir := args[0]
+
+	// Get the selected database type from command line flags
+	dbType, _ := cmd.Flags().GetString("database")
+	var repoURL string
+
+	// Choose the appropriate repoURL based on the selected database type
+	switch dbType {
+	case "mongo":
+		repoURL = repoURLMongo
+	case "sql":
+		repoURL = repoURLSQL
+	default:
+		fmt.Println("Error: Invalid database type. Please choose 'mongo' or 'sql'.")
+		return
+	}
 
 	// Create the destination directory if it doesn't exist
 	CreateDirectoryTemp(destDir)
@@ -68,9 +85,12 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		fmt.Println("Error when generating template:", err)
 		return
 	}
+	repoDirSQL := "NodeJs-Sequelize-Starter"
+	repoDirMONGO := "API-EXPRESS"
 
 	// Move all files from the cloned repository to the destination directory
-	MoveFiles(cmd, destDir, "API-EXPRESS")
+	MoveFiles(cmd, destDir, repoDirMONGO)
+	MoveFiles(cmd, destDir, repoDirSQL)
 
 	fmt.Println("Template generated successfully ")
 }
