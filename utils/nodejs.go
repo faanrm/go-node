@@ -45,12 +45,22 @@ func generateNodeJS(cmd *cobra.Command, args []string) {
 	InstallLibraries(cmd, "libs")
 	InstallLibraries(cmd, "dev-libs")
 }
-
 func generateTemplate(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
 		fmt.Println("Error: Please provide a folder name for the template.")
 		return
 	}
+
+	// Check if the database flag is provided
+	dbFlag := cmd.Flag("database")
+	if !dbFlag.Changed {
+		// If database flag is not provided, print an error and show the command to specify database
+		fmt.Println("Error: Please specify the database type using the --database flag.")
+		fmt.Println("Example: gno template --database <mongo/sql> <folder_name>")
+		return
+	}
+
+	// Continue with template generation
 
 	repoURLMongo := "https://github.com/Faanilo/API-EXPRESS.git"
 	repoURLSQL := "https://github.com/faanrm/NodeJs-Sequelize-Starter"
@@ -85,12 +95,14 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		fmt.Println("Error when generating template:", err)
 		return
 	}
-	repoDirSQL := "NodeJs-Sequelize-Starter"
-	repoDirMONGO := "API-EXPRESS"
 
-	// Move all files from the cloned repository to the destination directory
-	MoveFiles(cmd, destDir, repoDirMONGO)
-	MoveFiles(cmd, destDir, repoDirSQL)
+	if dbType == "mongo" {
+		repoDir := "API-EXPRESS"
+		MoveFiles(cmd, destDir, repoDir)
+	} else if dbType == "sql" {
+		repoDir := "NodeJs-Sequelize-Starter"
+		MoveFiles(cmd, destDir, repoDir)
+	}
 
 	fmt.Println("Template generated successfully ")
 }
