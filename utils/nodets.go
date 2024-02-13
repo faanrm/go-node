@@ -10,25 +10,12 @@ import (
 
 var templateTs = &cobra.Command{
 	Use:   "template-ts",
-	Short: "Generate node ts project using Typescript²	",
+	Short: "Generate node ts project using Typescript",
 	Run:   generateNodeTsTemplate,
-}
-var genNodeTS = &cobra.Command{
-	Use:   "ts-gen",
-	Short: "Generate nodejs project using TypeScript",
-	Long: `Generate nodejs project using Typescript
-	Example usage:
-	gno ts-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"`,
-	Run: generateNodeTS,
 }
 
 func init() {
 	rootCmd.AddCommand(templateTs)
-	rootCmd.AddCommand(genNodeTS)
-	genNodeTS.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
-	genNodeTS.Flags().BoolP("yes", "y", false, "Generate default NodeJs package.json file")
-	genNodeTS.Flags().StringP("libs", "l", " ", "List of Node.js libraries to install")
-	genNodeTS.Flags().StringP("dev-libs", "d", " ", "List of Node.js libraries to install")
 }
 func generateNodeTsTemplate(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
@@ -52,26 +39,4 @@ func generateNodeTsTemplate(cmd *cobra.Command, args []string) {
 	//move all repo to the desired folder
 	MoveFiles(cmd, destDir, "nodeTs-template")
 	fmt.Println("Template generated successfully")
-}
-func generateNodeTS(cmd *cobra.Command, args []string) {
-	dir, _ := cmd.Flags().GetString("directory")
-	CreateDirectory(dir)
-	CheckNPMInstallation()
-
-	ChangeDirectory(dir)
-
-	InitNodeProject(cmd)
-
-	GenerateTSConfigFile()
-
-	InstallLibraries(cmd, "libs")
-	InstallLibraries(cmd, "dev-libs")
-
-	CreateDirectory("./src")
-	CreateDirectory("./dist")
-
-	InstallTSC()
-
-	CreateFile("main.ts", "./src")
-
 }

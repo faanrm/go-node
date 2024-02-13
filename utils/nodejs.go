@@ -8,43 +8,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var genNode = &cobra.Command{
-	Use:   "node-gen",
-	Short: "Generate nodejs project",
-	Long: `Generate nodejs project
-	Example usage:
-	gno node-gen -D ./projects/myapp -l "lib1 lib2" -d "lib3 lib4"`,
-	Run: generateNodeJS,
-}
-
 var template = &cobra.Command{
 	Use:   "template",
-	Short: "Generate CRUD node template and specify the folder name",
-	Long:  `Generate CRUD node template`,
+	Short: "Generate  node template and specify the folder name",
+	Long:  `Generate  node template`,
 	Run:   generateTemplate,
 }
 
 func init() {
-	rootCmd.AddCommand(genNode)
 	rootCmd.AddCommand(template)
-	genNode.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
-	genNode.Flags().BoolP("yes", "y", false, "Generate default NodeJs package.json file")
-	genNode.Flags().StringP("libs", "l", " ", "List of Node.js libraries to install")
-	genNode.Flags().StringP("dev-libs", "d", " ", "List of Node.js libraries to install")
 	// Modify the template command to accept an argument for the folder name
 	template.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
 	template.Flags().StringP("database", "d", "mongo", "Choose database type: mongo or sql")
 }
 
-func generateNodeJS(cmd *cobra.Command, args []string) {
-	dir, _ := cmd.Flags().GetString("directory")
-	CreateDirectory(dir)
-	CheckNPMInstallation()
-	ChangeDirectory(dir)
-	InitNodeProject(cmd)
-	InstallLibraries(cmd, "libs")
-	InstallLibraries(cmd, "dev-libs")
-}
 func generateTemplate(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
 		fmt.Println("Error: Please provide a folder name for the template.")
