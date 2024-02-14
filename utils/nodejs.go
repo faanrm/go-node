@@ -10,7 +10,7 @@ import (
 
 var template = &cobra.Command{
 	Use:   "template",
-	Short: "Generate  node template and specify the folder name",
+	Short: "Generate  nodeJS template ",
 	Long:  `Generate  node template`,
 	Run:   generateTemplate,
 }
