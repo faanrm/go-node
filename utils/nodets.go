@@ -23,7 +23,7 @@ func generateNodeTsTemplate(cmd *cobra.Command, args []string) {
 		return
 	}
 	repoUrl := "https://github.com/faanrm/nodeTs-template"
-	destDir := args[0] //this to get the folder name from command line
+	destDir := args[0] //using to get the foldername to command line
 	CreateDirectory(destDir)
 	fmt.Println("Waiting for generating template .....")
 
