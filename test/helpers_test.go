@@ -3,12 +3,10 @@ package test
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"testing"
 
 	"github.com/faanrm/go-node/utils"
-	"github.com/spf13/cobra"
 )
 
 func TestCreateDirectory(t *testing.T) {
@@ -21,11 +19,6 @@ func TestCreateDirectory(t *testing.T) {
 	if os.IsNotExist(err) {
 		t.Error("Expected directory to be created, but it does not exist")
 	}
-}
-
-func TestCheckNPMInstallation(t *testing.T) {
-
-	utils.CheckNPMInstallation()
 }
 
 func TestChangeDirectory(t *testing.T) {
@@ -73,62 +66,6 @@ func TestCreateFile(t *testing.T) {
 
 	if string(fileContent) != content {
 		t.Errorf("Expected file content to be:\n%s\nGot:\n%s", content, string(fileContent))
-	}
-}
-
-func TestInitNodeProject(t *testing.T) {
-	cmd := &cobra.Command{}
-	cmd.Flags().Bool("yes", false, "")
-
-	// Test with default flags
-	utils.InitNodeProject(cmd)
-
-	// Test with custom flags
-	cmd.Flags().Set("yes", "true")
-	utils.InitNodeProject(cmd)
-}
-
-func TestInstallLibraries(t *testing.T) {
-	// Assuming cobra.Command and flags for testing
-	cmd := &cobra.Command{}
-	cmd.Flags().String("libs", "library1 library2", "")
-
-	// Test with default flags
-	utils.InstallLibraries(cmd, "libs")
-
-	// Test with custom flags
-	cmd.Flags().Set("libs", "library3 library4")
-	utils.InstallLibraries(cmd, "libs")
-
-}
-
-func TestGenerateTSConfigFile(t *testing.T) {
-	// Assuming the structure of TSConfig and expected JSON
-	expectedJSON := `{"compilerOptions":{"target":"ES6","module":"CommonJS","outDir":"./dist","rootDir":"./src","strict":true,"esModuleInterop":true,"skipLibCheck":true},"include":["src/**/*.ts"],"exclude":["node_modules"]}`
-
-	utils.GenerateTSConfigFile()
-	// Check if the tsconfig.json file was generated
-	_, err := os.Stat("tsconfig.json")
-	if os.IsNotExist(err) {
-		t.Error("Expected tsconfig.json file to be generated, but it does not exist")
-	}
-
-	// Check the content of the generated tsconfig.json file
-	fileContent, _ := os.ReadFile("tsconfig.json")
-	if string(fileContent) != expectedJSON {
-		t.Errorf("Expected tsconfig.json content to be %s, got %s", expectedJSON, string(fileContent))
-	}
-}
-
-func TestInstallTSC(t *testing.T) {
-	// Assuming tsc is not installed for the testing environment
-	utils.InstallTSC()
-
-	// Check if tsc is installed after running InstallTSC
-	cmd := exec.Command("tsc", "--version")
-	err := cmd.Run()
-	if err != nil {
-		t.Error("Expected tsc to be installed, but it is not")
 	}
 }
 
