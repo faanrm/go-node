@@ -78,7 +78,6 @@ func CreateDirectoryTemp(dir string) {
 }
 
 func MoveFiles(cmd *cobra.Command, destinationDir string, sourceDir string) {
-	// Get all files and subdirectories in the source directory
 	files, err := os.ReadDir(sourceDir)
 	if err != nil {
 		fmt.Println("Error reading source directory:", err)
