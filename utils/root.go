@@ -7,12 +7,18 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "gno",
-	Short: "Gno Code Generator",
-	Long: `Welcome to GNO: Your Node Project Generator!
-	GNO is a powerful and easy-to-use command line tool designed to kickstart your Node.js development. 
-	With just a few flags, you can generate a structured Node project, 
-	saving you time and setting you up with best practices.`,
+	Use: "gno",
+	Short: `
+_____/\\\\\\\\\\\\__/\\\\\_____/\\\_______/\\\\\______        
+ ___/\\\//////////__\/\\\\\\___\/\\\_____/\\\///\\\____       
+  __/\\\_____________\/\\\/\\\__\/\\\___/\\\/__\///\\\__      
+   _\/\\\____/\\\\\\\_\/\\\//\\\_\/\\\__/\\\______\//\\\_     
+    _\/\\\___\/////\\\_\/\\\\//\\\\/\\\_\/\\\_______\/\\\_    
+     _\/\\\_______\/\\\_\/\\\_\//\\\/\\\_\//\\\______/\\\__   
+      _\/\\\_______\/\\\_\/\\\__\//\\\\\\__\///\\\__/\\\____  
+       _\//\\\\\\\\\\\\/__\/\\\___\//\\\\\____\///\\\\\/_____ 
+        __\////////////____\///_____\/////_______\/////_______
+		`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
