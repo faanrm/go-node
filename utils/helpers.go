@@ -2,12 +2,10 @@ package utils
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -30,16 +28,6 @@ func CreateDirectory(dir string) {
 	fmt.Printf("Directory %v created successfully\n", dir)
 }
 
-func CheckNPMInstallation() {
-	checkNPM := exec.Command("npm", "--version")
-	npmVerOut, err := checkNPM.Output()
-	if err != nil {
-		fmt.Println("Can you please verify your node installation")
-		log.Fatal(err)
-	}
-	fmt.Printf("npm version : %v \n", string(npmVerOut))
-}
-
 /*
 	func ChangeDirectory(dir string) {
 		if err := os.Chdir(dir); err != nil {
@@ -49,7 +37,7 @@ func CheckNPMInstallation() {
 */
 func ChangeDirectory(dir string) error {
 	if err := os.Chdir(dir); err != nil {
-		return fmt.Errorf("Error changing directory: %v", err)
+		return fmt.Errorf("error changing directory: %v", err)
 	}
 	return nil
 }
@@ -75,112 +63,6 @@ func CreateFile(fileName string, dir string) {
 	}
 
 	fmt.Printf("Successfully created and wrote to %s/%s\n", dir, fileName)
-
-}
-
-func InitNodeProject(cmd *cobra.Command) {
-	def, _ := cmd.Flags().GetBool("yes")
-	cmdInit := exec.Command("npm", "init")
-	if def {
-		cmdInit.Args = append(cmdInit.Args, "-y")
-	}
-
-	cmdInit.Stdin = os.Stdin
-	cmdInit.Stdout = os.Stdout
-	cmdInit.Stderr = os.Stderr
-
-	if err := cmdInit.Run(); err != nil {
-		log.Fatal("Error executing command:", err)
-	}
-
-	fmt.Println("Node JS project initialized...")
-}
-
-func InstallLibraries(cmd *cobra.Command, flag string) {
-	usage := cmd.Use
-	librariesStr, _ := cmd.Flags().GetString(flag)
-	libraries := strings.Fields(librariesStr)
-	if len(libraries) > 0 {
-		fmt.Println("Installing node modules:", strings.Join(libraries, ", "))
-
-		npmArgs := []string{"install"}
-		if flag == "dev-libs" {
-			npmArgs = append(npmArgs, "--save-dev")
-		}
-
-		if usage == "ts-node" {
-			npmArgs = append(npmArgs, "typescript")
-		}
-
-		npmArgs = append(npmArgs, libraries...)
-
-		installCmd := exec.Command("npm", npmArgs...)
-		installCmd.Stdin = os.Stdin
-		installCmd.Stdout = os.Stdout
-		installCmd.Stderr = os.Stderr
-
-		if err := installCmd.Run(); err != nil {
-			log.Fatalf("Error installing node modules: %v", err)
-		}
-		fmt.Println("Node modules installed successfully.")
-	}
-}
-
-func GenerateTSConfigFile() {
-	// Create an instance of the TSConfig structure with your desired values.
-	config := TSConfig{
-		CompilerOptions: CompilerOptions{
-			Target:          "ES6",
-			Module:          "CommonJS",
-			OutDir:          "./dist",
-			RootDir:         "./src",
-			Strict:          true,
-			EsModuleInterop: true,
-			SkipLibCheck:    true,
-		},
-		Include: []string{"src/**/*.ts"},
-		Exclude: []string{"node_modules"},
-	}
-	jsonData, err := json.MarshalIndent(config, "", "    ")
-	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
-		return
-	}
-
-	// Write the JSON data to a file.
-	fileName := "tsconfig.json"
-	err = os.WriteFile(fileName, jsonData, 0644)
-	if err != nil {
-		fmt.Println("Error writing JSON to file:", err)
-		return
-	}
-
-	fmt.Printf("Generated %s\n", fileName)
-}
-
-func InstallTSC() {
-	// Check if tsc is installed by running a command.
-	cmd := exec.Command("tsc", "--version")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	err := cmd.Run()
-	if err != nil {
-		// tsc is not installed; let's install it.
-		fmt.Println("tsc is not installed. Waiting for TypeScript installation...")
-		installCmd := exec.Command("npm", "install", "-g", "typescript")
-		installCmd.Stdout = os.Stdout
-		installCmd.Stderr = os.Stderr
-
-		if err := installCmd.Run(); err != nil {
-			fmt.Printf("Error: %v\n", err)
-		}
-
-		fmt.Println("TypeScript has been installed successfully.")
-	} else {
-		// tsc is already installed.
-		fmt.Println("TypeScript is already installed.")
-	}
 
 }
 
