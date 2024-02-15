@@ -2,7 +2,7 @@
 
 Go-Node is a command-line interface (CLI) tool developed in Go for quickly generating Node  projects.
 
-<img width="800" src="./home.gif">
+<img width="800" src="./update.gif">
 
 ## Features
 
