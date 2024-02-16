@@ -10,8 +10,8 @@ import (
 
 var template = &cobra.Command{
 	Use:   "template",
-	Short: "Generate  nodeJS template ",
-	Long:  `Generate  node template`,
+	Short: "Generate nodeJS template",
+	Long:  `Generate node template`,
 	Run:   generateTemplate,
 }
 
@@ -62,16 +62,36 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 	CreateDirectoryTemp(destDir)
 	fmt.Println("Generating template ...")
 
-	// Clone the repository
+	// Afficher un message de chargement avant de cloner le dépôt
+	fmt.Println("waiting ...")
+	// Indicateur de progression initialisé à 0%
+	printProgress(0)
+
+	// Clone du dépôt
 	cmdClone := exec.Command("git", "clone", repoURL)
 	cmdClone.Stdout = os.Stdout
 	cmdClone.Stderr = os.Stderr
-	err := cmdClone.Run()
 
+	// Rediriger la sortie standard et la sortie d'erreur vers /dev/null pour cacher les commandes git
+	cmdClone.Stdout = nil
+	cmdClone.Stderr = nil
+
+	// Démarre le processus de clonage
+	err := cmdClone.Start()
 	if err != nil {
-		fmt.Println("Error when generating template:", err)
+		fmt.Println("Erreur lors du démarrage du clonage:", err)
 		return
 	}
+
+	// Attente de la fin du clonage
+	err = cmdClone.Wait()
+	if err != nil {
+		fmt.Println("Erreur lors du clonage:", err)
+		return
+	}
+
+	// Indicateur de progression à 100%
+	printProgress(100)
 
 	if dbType == "mongo" {
 		repoDir := "API-EXPRESS"
@@ -81,5 +101,10 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		MoveFiles(cmd, destDir, repoDir)
 	}
 
-	fmt.Println("Template generated successfully ")
+	fmt.Println("\nTemplate generated successfully")
+}
+
+// Fonction pour afficher un indicateur de progression
+func printProgress(progress int) {
+	fmt.Printf("\rChargement en cours... %d%%", progress)
 }
