@@ -17,9 +17,10 @@ var template = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(template)
-	// Modify the template command to accept an argument for the folder name
+	// Modify the template command to accept arguments for the folder name and authentication flag
 	template.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
 	template.Flags().StringP("database", "d", "mongo", "Choose database type: mongo or sql")
+	template.Flags().BoolP("auth", "a", false, "Include authentication")
 
 }
 
@@ -41,7 +42,7 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 	// Continue with template generation
 
 	repoURLMongo := "https://github.com/Faanilo/API-EXPRESS.git"
-	repoURLSQL := "https://github.com/faanrm/NodeJs-Sequelize-Starter"
+	repoURLSQL := "https://github.com/faanrm/NodeJs-Sequelize-Starter.git"
 	destDir := args[0]
 
 	// Get the selected database type from command line flags
@@ -59,50 +60,48 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	// Create the destination directory if it doesn't exist
-	CreateDirectoryTemp(destDir)
-	fmt.Println("Generating template ...")
-
-	// Afficher un message de chargement avant de cloner le dépôt
-	fmt.Println("waiting ...")
-	// Indicateur de progression initialisé à 0%
-	printProgress(0)
-
-	// Clone du dépôt
-	cmdClone := exec.Command("git", "clone", repoURL)
-	cmdClone.Stdout = os.Stdout
-	cmdClone.Stderr = os.Stderr
-
-	// Rediriger la sortie standard et la sortie d'erreur vers /dev/null pour cacher les commandes git
-	cmdClone.Stdout = nil
-	cmdClone.Stderr = nil
-
-	// Démarre le processus de clonage
-	err := cmdClone.Start()
-	if err != nil {
-		fmt.Println("Erreur lors du démarrage du clonage:", err)
-		return
-	}
-
-	err = cmdClone.Wait()
-	if err != nil {
-		fmt.Println("Erreur lors du clonage:", err)
-		return
-	}
-
-	printProgress(100)
-
-	if dbType == "mongo" {
-		repoDir := "API-EXPRESS"
-		MoveFiles(cmd, destDir, repoDir)
-	} else if dbType == "sql" {
-		repoDir := "NodeJs-Sequelize-Starter"
-		MoveFiles(cmd, destDir, repoDir)
+	// Check if the auth flag is provided
+	authFlag, _ := cmd.Flags().GetBool("auth")
+	if authFlag {
+		// If auth flag is provided, clone the repository and then switch to the "auth" branch
+		err := cloneAndCheckout(repoURL, "auth", destDir)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+	} else {
+		// If auth flag is not provided, clone the repository without switching branches
+		err := cloneAndCheckout(repoURL, "main", destDir) // Assuming main is the main branch name, change it if necessary
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
 	}
 
 	fmt.Println("\nTemplate generated successfully")
 }
 
-func printProgress(progress int) {
-	fmt.Printf("\rChargement en cours... %d%%", progress)
+func cloneAndCheckout(repoURL, branch, destDir string) error {
+	// Create the destination directory if it doesn't exist
+	CreateDirectoryTemp(destDir)
+
+	// Clone the repository
+	cmdClone := exec.Command("git", "clone", "-b", branch, "--single-branch", repoURL, destDir)
+	cmdClone.Stdout = os.Stdout
+	cmdClone.Stderr = os.Stderr
+	err := cmdClone.Run()
+	if err != nil {
+		return err
+	}
+
+	// Change to the specified branch
+	cmdCheckout := exec.Command("git", "-C", destDir, "checkout", branch)
+	cmdCheckout.Stdout = os.Stdout
+	cmdCheckout.Stderr = os.Stderr
+	err = cmdCheckout.Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
