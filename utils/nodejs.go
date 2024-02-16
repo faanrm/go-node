@@ -20,6 +20,7 @@ func init() {
 	// Modify the template command to accept an argument for the folder name
 	template.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
 	template.Flags().StringP("database", "d", "mongo", "Choose database type: mongo or sql")
+
 }
 
 func generateTemplate(cmd *cobra.Command, args []string) {
@@ -83,14 +84,12 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	// Attente de la fin du clonage
 	err = cmdClone.Wait()
 	if err != nil {
 		fmt.Println("Erreur lors du clonage:", err)
 		return
 	}
 
-	// Indicateur de progression à 100%
 	printProgress(100)
 
 	if dbType == "mongo" {
@@ -104,7 +103,6 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 	fmt.Println("\nTemplate generated successfully")
 }
 
-// Fonction pour afficher un indicateur de progression
 func printProgress(progress int) {
 	fmt.Printf("\rChargement en cours... %d%%", progress)
 }
