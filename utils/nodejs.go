@@ -79,8 +79,8 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		}
 	}
 
-	// Remove the .git directory
-	err := os.RemoveAll(filepath.Join(destDir, ".git"))
+	// Remove the .git directory and related Git files
+	err := cleanGitFiles(destDir)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -94,7 +94,7 @@ func cloneAndCheckout(repoURL, branch, destDir string) error {
 	CreateDirectoryTemp(destDir)
 
 	// Clone the repository
-	cmdClone := exec.Command("git", "clone", "-b", branch, "--single-branch", repoURL, destDir)
+	cmdClone := exec.Command("git", "clone", "-b", branch, "--single-branch", "--depth", "1", repoURL, destDir)
 	cmdClone.Stdout = os.Stdout
 	cmdClone.Stderr = os.Stderr
 	err := cmdClone.Run()
@@ -102,21 +102,22 @@ func cloneAndCheckout(repoURL, branch, destDir string) error {
 		return err
 	}
 
-	// Change to the specified branch
-	cmdCheckout := exec.Command("git", "-C", destDir, "checkout", branch)
-	cmdCheckout.Stdout = os.Stdout
-	cmdCheckout.Stderr = os.Stderr
-	err = cmdCheckout.Run()
-	if err != nil {
-		return err
+	return nil
+}
+
+func cleanGitFiles(dir string) error {
+	gitRelatedFiles := []string{
+		".git",
+		".gitattributes",
+		".gitmodules",
+	}
+
+	for _, file := range gitRelatedFiles {
+		err := os.RemoveAll(filepath.Join(dir, file))
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
-
-/*func CreateDirectoryTemp(destDir string) {
-	err := os.MkdirAll(destDir, os.ModePerm)
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
-}*/
