@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -78,6 +79,13 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		}
 	}
 
+	// Remove the .git directory
+	err := os.RemoveAll(filepath.Join(destDir, ".git"))
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+
 	fmt.Println("\nTemplate generated successfully")
 }
 
@@ -105,3 +113,10 @@ func cloneAndCheckout(repoURL, branch, destDir string) error {
 
 	return nil
 }
+
+/*func CreateDirectoryTemp(destDir string) {
+	err := os.MkdirAll(destDir, os.ModePerm)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+}*/
