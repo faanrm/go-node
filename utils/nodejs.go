@@ -1,10 +1,14 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
+	"sync"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -22,7 +26,6 @@ func init() {
 	template.Flags().StringP("directory", "D", "./myApp", "Output directory for the project")
 	template.Flags().StringP("database", "d", "mongo", "Choose database type: mongo or sql")
 	template.Flags().BoolP("auth", "a", false, "Include authentication")
-
 }
 
 func generateTemplate(cmd *cobra.Command, args []string) {
@@ -63,41 +66,60 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 
 	// Check if the auth flag is provided
 	authFlag, _ := cmd.Flags().GetBool("auth")
-	if authFlag {
-		// If auth flag is provided, clone the repository and then switch to the "auth" branch
-		err := cloneAndCheckout(repoURL, "auth", destDir)
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		// Run git clone in background
+		err := cloneAndCheckout(repoURL, destDir, authFlag)
 		if err != nil {
 			fmt.Println("Error:", err)
-			return
 		}
-	} else {
-		// If auth flag is not provided, clone the repository without switching branches
-		err := cloneAndCheckout(repoURL, "main", destDir) // Assuming main is the main branch name, change it if necessary
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
-	}
+	}()
 
-	// Remove the .git directory and related Git files
-	err := cleanGitFiles(destDir)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
+	// Print progress percentage
+	const totalSteps = 10 // Adjust this based on your estimation of the steps in git clone
+	for i := 0; i <= totalSteps; i++ {
+		// Print progress bar
+		const progressBarWidth = 50
+		progress := i * progressBarWidth / totalSteps
+		bar := strings.Repeat("=", progress) + strings.Repeat(" ", progressBarWidth-progress)
+		fmt.Printf("\rProgress: [%s] %d%%", bar, (i*100)/totalSteps)
 
+		os.Stdout.Sync()
+		time.Sleep(500 * time.Millisecond) // Adjust sleep duration as needed
+	}
 	fmt.Println("\nTemplate generated successfully")
+
+	wg.Wait()
 }
 
-func cloneAndCheckout(repoURL, branch, destDir string) error {
+func cloneAndCheckout(repoURL, destDir string, authFlag bool) error {
 	// Create the destination directory if it doesn't exist
 	CreateDirectoryTemp(destDir)
 
+	// Create a buffer to capture the output
+	var outputBuffer bytes.Buffer
+
 	// Clone the repository
-	cmdClone := exec.Command("git", "clone", "-b", branch, "--single-branch", "--depth", "1", repoURL, destDir)
-	cmdClone.Stdout = os.Stdout
-	cmdClone.Stderr = os.Stderr
+	cmdClone := exec.Command("git", "clone", "-b", "main", "--single-branch", "--depth", "1", repoURL, destDir)
+	if authFlag {
+		cmdClone = exec.Command("git", "clone", "-b", "auth", "--single-branch", "--depth", "1", repoURL, destDir)
+	}
+
+	// Redirect both stdout and stderr to the buffer
+	cmdClone.Stdout = &outputBuffer
+	cmdClone.Stderr = &outputBuffer
+
 	err := cmdClone.Run()
+	if err != nil {
+		return err
+	}
+
+	// Clean Git files after cloning
+	err = cleanGitFiles(destDir)
 	if err != nil {
 		return err
 	}
