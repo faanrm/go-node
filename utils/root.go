@@ -49,5 +49,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "Print the version of the CLI")
+	rootCmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "See version installed")
 }
