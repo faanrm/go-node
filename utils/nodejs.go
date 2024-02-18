@@ -45,7 +45,7 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 
 	// Continue with template generation
 
-	repoURLMongo := "https://github.com/Faanilo/API-EXPRESS.git"
+	repoURLMongo := "https://github.com/faanrm/NodeJs-Mongo-Starter.git"
 	repoURLSQL := "https://github.com/faanrm/NodeJs-Sequelize-Starter.git"
 	destDir := args[0]
 
