@@ -12,7 +12,7 @@ var reset = "\033[0m"
 
 var (
 	versionFlag bool
-	version     = "0.1.1"
+	version     = "0.1.2"
 )
 
 var rootCmd = &cobra.Command{

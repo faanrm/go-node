@@ -24,8 +24,6 @@ func CreateDirectory(dir string) {
 		fmt.Println("Standard error output:", stderr.String())
 		return
 	}
-
-	fmt.Printf("Directory %v created successfully\n", dir)
 }
 
 /*
