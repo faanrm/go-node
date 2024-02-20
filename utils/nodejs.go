@@ -80,7 +80,7 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 	}()
 
 	// Print progress percentage
-	const totalSteps = 10 // Adjust this based on your estimation of the steps in git clone
+	const totalSteps = 10
 	for i := 0; i <= totalSteps; i++ {
 		// Print progress bar
 		const progressBarWidth = 50
@@ -89,11 +89,15 @@ func generateTemplate(cmd *cobra.Command, args []string) {
 		fmt.Printf("\rProgress: [%s] %d%%", bar, (i*100)/totalSteps)
 
 		os.Stdout.Sync()
-		time.Sleep(500 * time.Millisecond) // Adjust sleep duration as needed
+		time.Sleep(500 * time.Millisecond)
 	}
 	fmt.Println("\nTemplate generated successfully")
 
 	wg.Wait()
+
+	fmt.Println("📂 cd", destDir)
+	fmt.Println("📦 npm i")
+	fmt.Println("🚀 go code")
 }
 
 func cloneAndCheckout(repoURL, destDir string, authFlag bool) error {
@@ -124,12 +128,6 @@ func cloneAndCheckout(repoURL, destDir string, authFlag bool) error {
 		return err
 	}
 
-	// Execute npm i in the cloned directory
-	err = executeNpmInstall(destDir)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -145,25 +143,6 @@ func cleanGitFiles(dir string) error {
 		if err != nil {
 			return err
 		}
-	}
-
-	return nil
-}
-
-func executeNpmInstall(dir string) error {
-	// Change directory to the project directory
-	err := os.Chdir(dir)
-	if err != nil {
-		return err
-	}
-
-	// Execute npm i
-	cmd := exec.Command("npm", "i")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	err = cmd.Run()
-	if err != nil {
-		return err
 	}
 
 	return nil
