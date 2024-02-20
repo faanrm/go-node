@@ -124,6 +124,12 @@ func cloneAndCheckout(repoURL, destDir string, authFlag bool) error {
 		return err
 	}
 
+	// Execute npm i in the cloned directory
+	err = executeNpmInstall(destDir)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -139,6 +145,25 @@ func cleanGitFiles(dir string) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func executeNpmInstall(dir string) error {
+	// Change directory to the project directory
+	err := os.Chdir(dir)
+	if err != nil {
+		return err
+	}
+
+	// Execute npm i
+	cmd := exec.Command("npm", "i")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		return err
 	}
 
 	return nil
