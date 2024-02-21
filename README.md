@@ -27,6 +27,10 @@ Generate a Node.js Template :
 gno  template --database <mongo/sql> <folder_name>
 ```
 
+Generate Node.js Template with auth : 
+```bash
+gno  template --database <mongo/sql> <folder_name> --auth
+```
 
 Generate a Node TS Project Template
 
